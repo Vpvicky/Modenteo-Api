@@ -6,7 +6,7 @@ export const dataSourceOptions: DataSourceOptions = {
   port: 5432,
   username: 'postgres',
   password: 'admin',
-  database: 'postgres',
+  database: 'modenteo',
   synchronize: true,
   logging: true,
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
