@@ -26,13 +26,13 @@
     "migration:create": "npm run typeorm -- migration:create",
     "migration:latest": "npm run typeorm -- migration:latest",
     "migration:down": "npm run typeorm -- migration:down"
-
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.3.1",
     "@nestjs/typeorm": "^10.0.2",
     "pg": "^8.11.5",
     "reflect-metadata": "^0.2.0",

@@ -4,7 +4,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
+import { SignInDto } from './dto/sign-in.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -12,23 +13,35 @@ export class UserService {
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const isExisist = this.findUserByEmail(createUserDto.email);
-    try {
-      if (!isExisist) {
-        createUserDto.password = await hash(createUserDto.password, 10);
-        const userCreate = this.userRepository.create(createUserDto);
-        const user = await this.userRepository.save(userCreate);
-        delete user.password;
-        return user;
-      }
-    } catch (err) {
-      throw new BadRequestException('Email already exists');
-    }
+  async signUp(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const userExisist = await this.findUserByEmail(createUserDto.email);
+    if (userExisist) throw new BadRequestException('Email is already exist');
+    const hasedPassword = await hash(createUserDto.password, 10);
+    const newUser = this.userRepository.create({
+      ...createUserDto,
+      password: hasedPassword,
+    });
+    const savedUser = await this.userRepository.save(newUser);
+    delete newUser.password;
+    return savedUser;
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async signIn(signInDto: SignInDto): Promise<UserEntity> {
+    const userExisist = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email: signInDto.email })
+      .getOne();
+
+    if (!userExisist) throw new BadRequestException('Bad Creditentials');
+    const matched = await compare(signInDto.password, userExisist.password);
+    if (!matched) throw new BadRequestException('Bad Creditentials');
+    delete userExisist.password;
+    return userExisist;
+  }
+  async findAll(): Promise<UserEntity[]> {
+    const users = await this.userRepository.find();
+    return users;
   }
 
   findOne(id: number) {

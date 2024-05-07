@@ -10,17 +10,26 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
-@Controller('user')
+import { ApiTags } from '@nestjs/swagger';
+import { SignInDto } from './dto/sign-in.dto';
+@ApiTags('User')
+@Controller({
+  path: 'user',
+  version: '1',
+})
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @Post('/signup')
+  signUp(@Body() createUserDto: CreateUserDto) {
+    return this.userService.signUp(createUserDto);
   }
 
-  @Get()
+  @Post('/signin')
+  signIn(@Body() signInDto: SignInDto) {
+    return this.userService.signIn(signInDto);
+  }
+
+  @Get('/get-user')
   findAll() {
     return this.userService.findAll();
   }
