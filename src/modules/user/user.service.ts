@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { SignUpDto } from './dto/sign-up.dto';
 import { UserEntity } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,12 +12,12 @@ export class UserService {
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  async signUp(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const userExisist = await this.findUserByEmail(createUserDto.email);
+  async signUp(SignUpDto: SignUpDto): Promise<UserEntity> {
+    const userExisist = await this.findUserByEmail(SignUpDto.email);
     if (userExisist) throw new BadRequestException('Email is already exist');
-    const hasedPassword = await hash(createUserDto.password, 10);
+    const hasedPassword = await hash(SignUpDto.password, 10);
     const newUser = this.userRepository.create({
-      ...createUserDto,
+      ...SignUpDto,
       password: hasedPassword,
     });
     const savedUser = await this.userRepository.save(newUser);
@@ -39,22 +38,15 @@ export class UserService {
     delete userExisist.password;
     return userExisist;
   }
-  async findAll(): Promise<UserEntity[]> {
+  async getAllUsers(): Promise<UserEntity[]> {
     const users = await this.userRepository.find();
-    return users;
+    const allUsers = users.map((user) => {
+      delete user.password;
+      return user;
+    });
+    return allUsers;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
   async findUserByEmail(email: string) {
     return await this.userRepository.findOneBy({ email });
   }
