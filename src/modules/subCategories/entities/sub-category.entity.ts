@@ -1,5 +1,5 @@
 import { Category } from 'src/modules/categories/entities/category.entity';
-import { ChildCategory } from 'src/modules/child-category/entities/child-category.entity';
+import { ChildCategory } from 'src/modules/childCategories/entities/child-category.entity';
 import {
   Column,
   Entity,

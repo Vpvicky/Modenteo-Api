@@ -1,5 +1,5 @@
 import { Product } from 'src/modules/product/entities/product.entity';
-import { SubCategory } from 'src/modules/sub-category/entities/sub-category.entity';
+import { SubCategory } from 'src/modules/subCategories/entities/sub-category.entity';
 import {
   Column,
   Entity,
@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('Child-Categories')
+@Entity('ChildCategories')
 export class ChildCategory {
   @PrimaryGeneratedColumn()
   id: number;

@@ -1,5 +1,5 @@
 import { Brands } from 'src/modules/brand/entities/brand.entity';
-import { ChildCategory } from 'src/modules/child-category/entities/child-category.entity';
+import { ChildCategory } from 'src/modules/childCategories/entities/child-category.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Products')

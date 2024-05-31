@@ -1,4 +1,4 @@
-import { SubCategory } from 'src/modules/sub-category/entities/sub-category.entity';
+import { SubCategory } from 'src/modules/subCategories/entities/sub-category.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Categories')
